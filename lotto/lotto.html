@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또1등</title>
+</head>
+<style>
+  .ball{
+    display: inline-block;
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    text-align: center;
+    margin-right: 20px;
+  }
+</style>
+<body>
+  <div id="result" class="ball">추첨결과</div>
+  <div id="bonus">보너스</div>
+
+    <script>
+const $result = document.querySelector('#result');
+const $bonus = document.querySelector('#bonus');
+  
+
+    const candidate = Array(45).fill(0).map((v,i)=>i+1)
+    const shuffle = [];
+    // 반복수만큼 랜덤을 돌리는경우.
+    // for(let i = 0; i<=6;i++){
+    //     let random = Math.floor(Math.random()*candidate.length)
+    //     candidate.splice(random,1)
+    //     list.push(candidate[random])
+    // }
+
+
+    // 전체숫자의 랜덤을 돌리는경우(for,while)
+    while(candidate.length>0){
+      let random = Math.floor(Math.random()*candidate.length);
+      let spliceArray = candidate.splice(random,1);
+      let value = spliceArray[0];
+      shuffle.push(value);
+    }
+    // for(let i = candidate.length; i>0; i--){
+    //   let random = Math.floor(Math.random()*i);
+    //   let spliceArray = candidate.splice(random,1);
+    //   let value = spliceArray[0];
+    //   shuffle.push(value);
+    // }
+
+    //map,slice 원본안변함
+    // sort사용시 원본이 바뀌니까 중간에 slice를 넣어서 복사한후 사용
+      let winner =shuffle.slice(0,6).sort((a,b)=>a-b);
+      let bonus = shuffle[6]
+
+      setTimeout(()=>{winner},2000)
+      
+      $result.innerHTML = winner;
+      $bonus.innerHTML = bonus;
+    
+    
+    </script>
+    <!-- 1~45 숫자만들기
+    랜덤으로 숫자7개 뽑기
+    1초마다 한개씩 나오게 -->
+
+    
+
+</body>
+</html>
