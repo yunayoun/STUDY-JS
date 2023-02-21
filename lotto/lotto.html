@@ -10,6 +10,7 @@
   .ball{
     display: inline-block;
     border: 1px solid black;
+    border-radius: 50%;
     width: 40px;
     height: 40px;
     line-height: 40px;
@@ -19,49 +20,88 @@
   }
 </style>
 <body>
-  <div id="result" class="ball">추첨결과</div>
+  <div id="result">추첨결과</div>
   <div id="bonus">보너스</div>
 
-    <script>
+<script>
 const $result = document.querySelector('#result');
 const $bonus = document.querySelector('#bonus');
-  
-
-    const candidate = Array(45).fill(0).map((v,i)=>i+1)
-    const shuffle = [];
-    // 반복수만큼 랜덤을 돌리는경우.
-    // for(let i = 0; i<=6;i++){
-    //     let random = Math.floor(Math.random()*candidate.length)
-    //     candidate.splice(random,1)
-    //     list.push(candidate[random])
-    // }
 
 
-    // 전체숫자의 랜덤을 돌리는경우(for,while)
-    while(candidate.length>0){
-      let random = Math.floor(Math.random()*candidate.length);
-      let spliceArray = candidate.splice(random,1);
-      let value = spliceArray[0];
-      shuffle.push(value);
+  const candidate = Array(45).fill(0).map((v,i)=>i+1)
+  const shuffle = [];
+  // 반복수만큼 랜덤을 돌리는경우.
+  // for(let i = 0; i<=6;i++){
+  //     let random = Math.floor(Math.random()*candidate.length)
+  //     candidate.splice(random,1)
+  //     list.push(candidate[random])
+  // }
+
+  //피셔-예이츠 셔플 알고리즘(숫자를무작위로섞는방법) 
+  // 전체숫자의 랜덤을 돌리는경우(for,while)
+  while(candidate.length>0){
+    let random = Math.floor(Math.random()*candidate.length);
+    let spliceArray = candidate.splice(random,1);
+    let value = spliceArray[0];
+    shuffle.push(value);
+  }
+  // for(let i = candidate.length; i>0; i--){
+  //   let random = Math.floor(Math.random()*i);
+  //   let spliceArray = candidate.splice(random,1);
+  //   let value = spliceArray[0];
+  //   shuffle.push(value);
+  // }
+
+  //map,slice 원본안변함
+  // sort사용시 원본이 바뀌니까 중간에 slice를 넣어서 복사한후 사용
+    let winner =shuffle.slice(0,6).sort((a,b)=>a-b);
+    let bonus = shuffle[6]
+    
+    function ballColors(number,$tag){
+      if(number <10){
+        $tag.style.backgroundColor = 'red';
+        $tag.style.color = 'white';
+      }
+      else if(number <20){
+        $tag.style.backgroundColor = 'orange';
+        $tag.style.color = 'white';
+      }
+      else if(number <30){
+        $tag.style.backgroundColor = 'yellow';
+      }
+      else if(number <40){
+        $tag.style.backgroundColor = 'blue';
+        $tag.style.color = 'white';
+      }
+      else if(number <50){
+        $tag.style.backgroundColor = 'green';
+        $tag.style.color = 'white';
+      }
     }
-    // for(let i = candidate.length; i>0; i--){
-    //   let random = Math.floor(Math.random()*i);
-    //   let spliceArray = candidate.splice(random,1);
-    //   let value = spliceArray[0];
-    //   shuffle.push(value);
-    // }
 
-    //map,slice 원본안변함
-    // sort사용시 원본이 바뀌니까 중간에 slice를 넣어서 복사한후 사용
-      let winner =shuffle.slice(0,6).sort((a,b)=>a-b);
-      let bonus = shuffle[6]
+    const ballSet =(number,$target)=>{
+      const $ball = document.createElement('div');
+      $ball.className='ball';
+      ballColors(number,$ball);
+      $ball.textContent = number;
+      $target.append($ball);
+    }
 
-      setTimeout(()=>{winner},2000)
+  for(let i = 0; i<winner.length; i++){
+    setTimeout(()=>{
+        ballSet(winner[i],$result)
+    },(i +1)* 1000);
+  }
+    setTimeout(()=>{
+      ballSet(bonus,$bonus)
+    },7000)
+    
+
+    
+    
+    
+
       
-      $result.innerHTML = winner;
-      $bonus.innerHTML = bonus;
-    
-    
     </script>
     <!-- 1~45 숫자만들기
     랜덤으로 숫자7개 뽑기
