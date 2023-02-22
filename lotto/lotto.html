@@ -86,16 +86,19 @@ const $bonus = document.querySelector('#bonus');
       $ball.textContent = number;
       $target.append($ball);
     }
-
-  for(let i = 0; i<winner.length; i++){
-    setTimeout(()=>{
-        ballSet(winner[i],$result)
-    },(i +1)* 1000);
-  }
-    setTimeout(()=>{
-      ballSet(bonus,$bonus)
-    },7000)
+    //div를 추가해서 클라스와 텍스트를 넣고 append하고
+    // ballset 함수에 변수를 두고 settime 사용
     
+    for(let i = 0; i<winner.length; i++){
+      setTimeout(()=>{
+          ballSet(winner[i],$result)
+      },(i +1)* 1000);
+    }
+      setTimeout(()=>{
+        ballSet(bonus,$bonus)
+      },7000)
+      
+
 
     
     
