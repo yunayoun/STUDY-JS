@@ -86,22 +86,48 @@ $computer.style.backgroundSize = 'auto 200px';
   
    //function yy ===function yy =>false
    //객체(함수,배열,,,)는 비교하면 다름. 같으려면 변수에 넣어서 사용해야만함
-   //addevent,removeevent할때 주의해야함.아래 코드 안전 .
+   //addEvent,removeEvent할때 주의해야함.아래 코드 안전 .
    //a={}; b=a; a===b; true;
   
   let intervalId =setInterval(changeComputer,50);
-  
-    clickable = true;
-    const clickButton = ()=>{
-      if(clickable){
-        clearInterval(intervalId);
-        clickable = false;
-        setTimeout(()=>{
-          clickable= true;
-          intervalId =setInterval(changeComputer,50);
-        },1000);
+
+  const scoreTable ={
+    rock: 0,
+    scissors: 1,
+    paper: -1,
+  }//if문보다 코드가 짧아짐.규칙찾아서 숫자로 입력함.
+
+  let clickable = true;
+  let score = 0;
+  const clickButton = (event)=>{
+    if(clickable){
+      clearInterval(intervalId);
+      clickable = false;
+    const myChoice = event.target.id === 'rock'?
+      'rock' : event.target.textContent === '가위'?
+      'scissors' :'paper';
+
+      const myScore = scoreTable[myChoice];
+      const computerScore = scoreTable[comChoice];
+      const diff = myScore - computerScore;
+      let message;
+      //2,-1은 승리/-2,1은 패배/스코어테이블 참고
+      if([2,-1].includes(diff)){
+        score += 1;
+        message = '승리';
+      }else if ([-2,1].includes(diff)){
+        score += -1;
+        message = '패배';
+      }else{
+        message = '무승부';
       }
-    };
+      $score.textContent = `${message} : 총: ${score}점`;
+      setTimeout(()=>{
+        clickable= true;
+        intervalId =setInterval(changeComputer,50);
+      },1000);
+    }
+  };
 
 
 $rock.addEventListener('click',clickButton);
