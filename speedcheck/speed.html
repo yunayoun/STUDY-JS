@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반응속도</title>
+</head>
+<style>
+#screen{
+  width: 300px;
+  text-align: center;
+  user-select: none;
+}
+#screen.waiting{
+  background-color: aqua;
+}
+#screen.ready{
+  background-color: red;
+  color: white;
+}
+#screen.now{
+  background-color: greenyellow;
+}
+</style>
+
+<body>
+  <div id="screen" class="waiting">클릭해서시작하세요</div>
+  <div id="result"></div>
+  
+  <script src="speed.js"></script>
+  </body>
+  </html>
+
+  <!-- 파랑화면 -대기
+  파랑클릭 빨강변한후  랜덤시간후 초록으로변함 초록으로 변할때 시간재고 -대기
+  클릭하면 시간재고 빼서 파랑으로 전환 (시간차이 저장)
+  초록안변햇을때 클릭시 메세지주고 파랑화면 - 대기 -->
+  
