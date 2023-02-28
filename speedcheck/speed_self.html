@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+  #screen{
+    width: 300px;
+    height: 300px;
+    text-align: center;
+  }
+  #screen.wait{
+    background-color: yellowgreen;
+  }
+  #screen.ready{
+    background-color: red;
+  }
+  #screen.now{
+    background-color: blue;
+  }
+</style>
+<body>
+  <div id="screen" class="wait">클릭하세요</div>
+  <div id="result"></div>
+
+  <!-- ++빠른순으로 5위까지 -->
+
+
+  <script src="speed_self.js"></script>
+</body>
+</html>
