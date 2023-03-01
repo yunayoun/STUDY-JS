@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>틱택토</title>
+</head>
+<style>
+  table{
+    border-collapse: collapse;
+  }
+  td{
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+  }
+</style>
+<body>
+<script>
+const {body} = document;//구조분해할당
+const $table = document.createElement('table');
+const $result = document.createElement('div');
+const rows =[];
+let turn = '0';
+// // [
+// // [td,td,td],
+// // [td,td,td],
+// // [td,td,td],
+// // ]
+// for(let i=0; i<3; i++){
+//   rows.push([]);
+// }
+const checkWinner=(target)=>{
+  const rowIndex = target.parentNode.rowIndex;
+  const cellIndex = target.cellIndex
+  //td에 cellIdex 가지고있음,row 안가지고있음
+  //1번 parentNode=>태그의 부모태그가져오기
+  // ex)td.parentNode = tr
+  //태그.children =태그의 자식태그
+  //ex)table.children = tr,tr,tr
+
+  //2번 let rowIndex; 
+  // let cellIndex; 
+  // rows.forEach((row,ri)=>{
+  //   row.forEach((cell,ci)=>{
+  //     if(cell === target){
+  //       rowIndex =ri;
+  //       cellIndex = ci;
+  //     }
+  //   });
+  // });
+
+  //세칸 다?
+  let getWinner = false;
+  //가로줄검사
+  if(
+    rows[rowIndex][0].textContent === turn &&
+    rows[rowIndex][1].textContent === turn &&
+    rows[rowIndex][2].textContent === turn 
+  ){
+    getWinner = true;
+  }
+  //세로줄
+  if(
+    rows[0][cellIndex].textContent === turn &&
+    rows[1][cellIndex].textContent === turn &&
+    rows[2][cellIndex].textContent === turn 
+  ){
+    getWinner = true;
+  }
+  //대각선
+  if(
+    rows[0][0].textContent === true &&
+    rows[1][1].textContent === true &&
+    rows[2][2].textContent === true 
+  ){
+    getWinner = true;
+  }
+  if(
+    rows[0][2].textContent ===true &&
+    rows[1][1].textContent ===true &&
+    rows[2][0].textContent ===true 
+  ){
+    getWinner = true;
+  }
+  return getWinner;
+}
+
+const callback=(e)=>{
+   //칸에 글자가있나?
+  if(e.target.textContent)return;//remove event쓰지말고 조건에안맞으면 바로종료
+  e.target.textContent = turn;
+    //승부확인
+    const getWinner  = checkWinner(e.target)
+    if(getWinner){
+      $result.textContent = `${turn}님 승리`;
+      $table.removeEventListener('click',callback);//
+      return;
+    }//1.무승부검사
+    // let count = 0;
+    // rows.forEach((row)=>{
+    //   row.forEach((cell)=>{
+    //     if(cell.textContent){
+    //       count += 1;
+    //     }
+    //   });
+    // });
+    // if(count === 9){
+    //   $result.textContent = '무승부'
+    //   return;
+    // }
+    //
+    // 2.무승부검사(전부차있으면true)
+    // let drew = true;
+    // rows.forEach((row)=>{
+    //   row.forEach((cell)=>{
+    //     if(!cell.textContent){
+    //       drew = false;
+    //     }
+    //   });
+    // });
+    // if(drew){
+    //   $result.textContent = '무승부'
+    //   return;
+    // }
+    //3번
+    // flat는 이차원배열을 일차원배열로바꿔줌.[td,td,td,td,td,td...]3차원일경우2차원으로
+    // 2번과 같이 전체적으로 차있는냐 없느냐로 구분짓지만
+    // forEach같은경우 반복할때 앞부분에 빈곳이있어도 전체적으로 한바퀴를 돌아야함.
+    // every는 빈곳이나타나면 바로 리턴.some은 하나라도 있으면 리턴.
+    let drew = rows.flat().every((cell)=>cell.textContent);
+      if(drew){
+        $result.textContent = '무승부'
+        return;
+      }
+
+    turn = (turn==='0'? 'X':'0');
+}
+
+for(let i=0; i<3; i++){//배열안에 배열들어가있는 이차원배열
+  const $tr = document.createElement('tr');
+  const cells =[];
+  for(let j=0; j<3; j++){
+    const $td = document.createElement('td');
+    cells.push($td);
+    $table.addEventListener('click',callback);
+    //함수로뺄수있으면 함수로 빼는게 좋음.뺄때 스코프 주의.
+    //td가아닌 td의 이벤트버블링으로 테이블로 이벤트잡음.td마다 이벤트를넣거나지워야할때도 반복이라
+    $tr.append($td);
+  }
+  rows.push(cells);
+  $table.append($tr);
+
+}
+document.body.append($table);
+document.body.append($result);
+
+// 5줄*4칸 이차원배열만들기(배열요소 모두1)
+// const array = [];
+// for(let i = 0; i<5; i++){
+//   const cell = [];
+//   for(let j= 0; j<4; j++){
+//     cell.push(1);
+//   }
+//   array.push(cell)
+// }
+
+
+// 이벤트버블링-자식에서 부모로 올라가는 현상 (버블링막으려면 event.stopPropagation)
+// 이벤트캡쳐링-부모에서 자식으로 
+
+</script>
+</body>
+</html>
