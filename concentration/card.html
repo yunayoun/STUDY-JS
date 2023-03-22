@@ -52,10 +52,13 @@
 const $wrapper = document.querySelector('#wrapper');
 
 const total = 12;
-const colors =['red','orange','yellow','green','blue','white','pink'];
+const colors =['red','orange','yellow','green','pink','white'];
 let colorCopy = colors.concat(colors);
 let shuffled = [];
 let clicked = [];
+let completed = [];
+let clickable = false;
+
 
 function shuffle(){//피셔에이츠셔플
   for(let i = 0; colorCopy.length >0; i++){
@@ -80,13 +83,39 @@ function createCard(i){
   return card;
 }
 function onClickCard(){
-  this.classList.toggle('flipped');
-  clicked.push(this);
-  if(clicked !==2){
+  if(!clickable || completed.includes(this) || clicked[0]=== this){//카드회전동안 클릭방지/맟춰진카드 다시클릭방지/연달아클릭방지
     return;
   }
+  this.classList.toggle('flipped');
+  clicked.push(this);
+  if(clicked.length !==2){
+    return;
+  }
+  const firstBackColor = clicked[0].querySelector('.card-back').style.backgroundColor;
+  const secondBackColor = clicked[1].querySelector('.card-back').style.backgroundColor;
+  if(firstBackColor === secondBackColor){//두카드가같으면
+    completed.push(clicked[0]);
+    completed.push(clicked[1]);
+    clicked=[];
+    //completed = completed.concat(clicked);
+    if(completed.length !==total){
+      return
+    }
+    setTimeout(() => {
+      alert('축하축하');
+      resetGame();
+    }, 1000);
+    return;
+  }
+  setTimeout(() => {//셋타임없이할경우 에러발생--시간차가없어서 앞면이보이기도전에 flipped클래스가 제거됨.
+    clicked[0].classList.remove('flipped');
+    clicked[1].classList.remove('flipped');
+    clicked=[]; 
+  }, 1000);
+
 }
 function startGame(){
+  clickable = false;
   shuffle();
   for(let i = 0; i<total; i+=1){
     const card = createCard(i);
@@ -101,7 +130,8 @@ function startGame(){
   setTimeout(()=>{//카드숨김
     document.querySelectorAll('.card').forEach((card)=>{
       card.classList.remove('flipped')
-    })
+    });
+    clickable = true;
   },5000);
 
 
@@ -110,6 +140,13 @@ function startGame(){
 
 }
 startGame();
+function resetGame(){
+  $wrapper.innerHTML = '';
+  colorCopy = colors.concat(colors);
+  shuffled=[];
+  clicked=[];
+  startGame();
+}
 
 </script>
 </html>
