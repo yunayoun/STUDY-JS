@@ -51,13 +51,15 @@
 <script>
 const $wrapper = document.querySelector('#wrapper');
 
-const total = 12;
-const colors =['red','orange','yellow','green','pink','white'];
-let colorCopy = colors.concat(colors);
+const total = parseInt(prompt('카드갯수를 짝수로 적으세요(최대20)'))
+const colors =['red','orange','yellow','green','pink','white','aqua','purple','brown','black'];
+let colorSlice = colors.slice(0,total/2)
+let colorCopy = colorSlice.concat(colorSlice);
 let shuffled = [];
 let clicked = [];
 let completed = [];
 let clickable = false;
+let startTime;
 
 
 function shuffle(){//피셔에이츠셔플
@@ -101,16 +103,20 @@ function onClickCard(){
     if(completed.length !==total){
       return
     }
+    let endTime = new Date();
     setTimeout(() => {
-      alert('축하축하');
+      alert(`축하축하 ${(endTime - startTime)/1000}초 `);
       resetGame();
     }, 1000);
     return;
   }
+    //카드가 4개연속해서누를시 버그발생되므로 2개클릭하면 클릭방지
+  clickable=false;
   setTimeout(() => {//셋타임없이할경우 에러발생--시간차가없어서 앞면이보이기도전에 flipped클래스가 제거됨.
     clicked[0].classList.remove('flipped');
     clicked[1].classList.remove('flipped');
     clicked=[]; 
+    clickable = true;
   }, 1000);
 
 }
@@ -132,6 +138,7 @@ function startGame(){
       card.classList.remove('flipped')
     });
     clickable = true;
+    startTime = new Date();
   },5000);
 
 
