@@ -66,10 +66,12 @@ function shuffle(){//피셔에이츠셔플
   for(let i = 0; colorCopy.length >0; i++){
     const randomIndex = Math.floor(Math.random()* colorCopy.length);
     shuffled = shuffled.concat(colorCopy.splice(randomIndex,1));
-    //기존shuffled에 합쳐서 새로운배열을 만들고 그것을 다시 shuffled 대입
+    //랜덤인덱스를 하나뽑아서 컬러카피에서 splice 로 랜덤인덱스를 값을 빼서 그 값을 셔플드에 넣고
+    //컬러카피가 splice 해서 뺏으니까 갯수가 한개씩 줄어든다.0개가 되면 반복문 끝.
+    console.log(shuffled,colorCopy.length)
   }
 }
-function createCard(i){
+function createCard(i){//i를 넣는이유는 total 갯수에 맟추려고
   const card = document.createElement('div');
     card.className = 'card';
   const cardInner = document.createElement('div');
@@ -90,7 +92,7 @@ function onClickCard(){
   }
   this.classList.toggle('flipped');
   clicked.push(this);
-  if(clicked.length !==2){
+  if(clicked.length !==2){//length까먹고 왜개속안넣어ㅓㅓㅓ정신차려
     return;
   }
   const firstBackColor = clicked[0].querySelector('.card-back').style.backgroundColor;
@@ -148,7 +150,7 @@ function startGame(){
 }
 startGame();
 function resetGame(){
-  $wrapper.innerHTML = '';
+  $wrapper.innerHTML = '';//화면카드들
   colorCopy = colors.concat(colors);
   shuffled=[];
   clicked=[];
