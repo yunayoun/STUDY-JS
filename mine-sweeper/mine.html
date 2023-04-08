@@ -22,18 +22,26 @@
   </style>
 </head>
 <body>
+  <form id="form">
+    <input type="text" placeholder="가로" id="row" size="5">
+    <input type="text" placeholder="세로" id='cell' size="5">
+    <input type="text" placeholder="지뢰" id="mine" size="5">
+    <button>생성</button>
+  </form>
+  <div id="timer">0초</div>
   <table id="table">
     <tbody></tbody>
   </table>
   <div id="result"></div>
   
   <script>
-  
-  const $tbody = document.querySelector('#table tbody');
-  const $result = document.querySelector('#result');
-  const row = 10;
-  const cell = 10;
-  const  mine= 10;
+    const $tbody = document.querySelector('#table tbody');
+    const $result = document.querySelector('#result');
+    const $timer = document.querySelector('#timer');
+    const $form = document.querySelector('#form');
+    let row = 10;
+  let cell = 10;
+  let mine= 10;
   const CODE = {
   NORMAL: -1, // 닫힌 칸(지뢰 없음)
   QUESTION: -2,
@@ -43,7 +51,30 @@
   MINE: -6,
   OPENED: 0, // 0 이상이면 다모두 열린 칸
 };
-let data;
+  let data;
+  let openCount;
+  let startTime;
+  let interval;
+
+function onSubmit(e){
+  e.preventDefault();
+  row = parseInt(e.target.row.value);
+  cell= parseInt(e.target.cell.value);
+  mine = parseInt(e.target.mine.value);
+  openCount=0;
+  normalCellFound = false;
+  searched = null;
+  firstClick = true;
+  clearInterval(interval);
+  $tbody.innerHTML = '';//이게없으면 바로밑에화면에 다시생김
+  drawTable();
+  startTime= new Date();
+  interval = setInterval(()=>{
+    const time = Math.floor((new Date()-startTime)/1000);
+    $timer.textContent = `${time}초`;
+  },1000);
+}
+$form.addEventListener('submit',onSubmit);
 
 function plantMine(){
   const candidate = Array(row *cell).fill().map((arr,i)=>{
@@ -123,6 +154,7 @@ function countMine(rowIndex,cellIndex){
   //optional chaining 이란 ?.
 }
 function open(rowIndex,cellIndex){
+  if(data[rowIndex]?.[cellIndex] >= CODE.OPENED)return;//8칸을 열때 열려있던칸을 다시 열면서 무한반복되서 느려지고 멈춤.했던건 건들지 않는 코드추가
   const target = $tbody.children[rowIndex]?.children[cellIndex]
   if(!target){
     return;
@@ -131,37 +163,98 @@ function open(rowIndex,cellIndex){
   target.textContent = count || '';
   target.className = 'opened';
   data[rowIndex][cellIndex]= count;
+  openCount++;
+  console.log(openCount)
+  if(openCount === row*cell -mine){
+    const time = (new Date() - startTime)/1000;
+    clearInterval(interval)
+    $tbody.removeEventListener('contextmenu',onRightClick)
+    $tbody.removeEventListener('click',onLeftClick)
+    setTimeout(() => {
+      alert(`승리! 시간 : ${time}` )
+    }, 0);
+  }
   return count;
 }
 function openAround(rI,cI){
   const count = open(rI,cI)
-  if(count === 0){
-    openAround(rI -1,cI-1);
-    openAround(rI -1,cI);
-    openAround(rI -1,cI+1);
-    openAround(rI,cI-1);
-    openAround(rI,cI+1);
-    openAround(rI +1,cI-1);
-    openAround(rI+1,cI);
-    openAround(rI +1,cI +1);
-    //open(rI +1,cI +1)이렇게 하면 지뢰가없을경우 내주변8칸을 열어준다
-    //주변에 지뢰가 없으면 연결해서 칸을 열어주기위해서는 재귀함수(함수안에 자기함수가 들어가는것)
+  setTimeout(() => {
+    if(count === 0){
+      openAround(rI -1,cI-1);
+      openAround(rI -1,cI);
+      openAround(rI -1,cI+1);
+      openAround(rI,cI-1);
+      openAround(rI,cI+1);
+      openAround(rI +1,cI-1);
+      openAround(rI+1,cI);
+      openAround(rI +1,cI +1);
+      //open(rI +1,cI +1)이렇게 하면 지뢰가없을경우 내주변8칸을 열어준다
+      //주변에 지뢰가 없으면 연결해서 칸을 열어주기위해서는 재귀함수(함수안에 자기함수가 들어가는것)
+      //settime 감싸면 호출스택으로 몰리는 상황을 백그라운드와 큐로 분배할수있고 큐가 호출스택이 비어있을때실행하므로 
+      // maximum callstack size exceeded 에러방지.
+    
+    }
+  }, 0);
+}
+
+let normalCellFound = false;
+let searched;
+let firstClick = true;
+function transferMine(rI, cI) {
+  if (normalCellFound) return; // 이미 빈칸을 찾았으면 종료
+  if (rI < 0 || rI >= row || cI < 0 || cI >= cell) return;
+  if (searched[rI][cI]) return; // 이미 찾은 칸이면 종료
+  if (data[rI][cI] === CODE.NORMAL) { // 빈칸인 경우
+    normalCellFound = true;
+    data[rI][cI] = CODE.MINE;
+  } else { // 지뢰 칸인 경우 8방향 탐색
+    searched[rI][cI] = true;
+    transferMine(rI - 1, cI - 1);
+    transferMine(rI - 1, cI);
+    transferMine(rI - 1, cI + 1);
+    transferMine(rI, cI - 1);
+    transferMine(rI, cI + 1);
+    transferMine(rI + 1, cI - 1);
+    transferMine(rI + 1, cI);
+    transferMine(rI + 1, cI + 1);
   }
+}
+
+function showMines() {
+  const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
+  data.forEach((row, rowIndex) => {
+    row.forEach((cell, cellIndex) => {
+      if (mines.includes(cell)) {
+        $tbody.children[rowIndex].children[cellIndex].textContent = 'X';
+      }
+    });
+  });
 }
 function onLeftClick(e){
   const target = e.target;//td
   const rowIndex = target.parentNode.rowIndex;//tr
   const cellIndex = target.cellIndex;
-  const cellData = data[rowIndex][cellIndex];
-  if(cellData === CODE.NORMAL){//닫힌칸
-    openAround(rowIndex,cellIndex);
-  }else if(cellData === CODE.MINE){//지뢰칸
+  let cellData = data[rowIndex][cellIndex];
+  if (firstClick) {
+    firstClick = false;
+    searched = Array(row).fill().map(() => []);
+    if (cellData === CODE.MINE) { // 첫 클릭이 지뢰면
+      transferMine(rowIndex, cellIndex); // 지뢰 옮기기
+      data[rowIndex][cellIndex] = CODE.NORMAL; // 지금 칸을 빈칸으로
+      cellData = CODE.NORMAL;
+    }
+  }
+  if (cellData === CODE.NORMAL) { // 닫힌 칸이면
+    openAround(rowIndex, cellIndex);
+  } else if (cellData === CODE.MINE) { // 지뢰 칸이면
+    showMines();
     target.textContent = '펑';
     target.className = 'opened';
-    $tbody.removeEventListener('contextmenu',onRightClick)
-    $tbody.removeEventListener('click',onLeftClick)
-    //펑,나머지는 무시
-  }
+    clearInterval(interval);
+    $tbody.removeEventListener('contextmenu', onRightClick);
+    $tbody.removeEventListener('click', onLeftClick);
+  } // 나머지는 무시
+  // 아무 동작도 안 함
 }
 
 function drawTable(){
@@ -171,7 +264,7 @@ function drawTable(){
     row.forEach((cell)=>{
       const $td = document.createElement('td');
       if(cell=== CODE.MINE){
-        $td.textContent = 'X'
+        // $td.textContent = 'X'//개발자편의
       }
       $tr.appendChild($td);
     })
@@ -180,7 +273,8 @@ function drawTable(){
     $tbody.addEventListener('click',onLeftClick)
   })
 }
-drawTable();
+
 </script>
 </body>
 </html>
+
