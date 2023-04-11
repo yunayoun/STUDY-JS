@@ -70,11 +70,12 @@
       const emptyCells = [];//[[i1,j1],[i2,j2]]
       data.forEach((rowData,i)=>{
         rowData.forEach((cellData,j)=>{
-          if(!cellData){
+          if(!cellData){//셀데이터의 0이므로 false,빈칸들의 위치를 엠티셀 모아둔다 
             emptyCells.push([i,j])
           }
         })
       })
+      //randomCell = [i,j]
       const randomCell = emptyCells[Math.floor(Math.random()*emptyCells.length)]
       data[randomCell[0]][randomCell[1]] = 2;
     }
@@ -85,7 +86,7 @@
           if(cellData > 0){
             $target.textContent = cellData;
             $target.className = 'color-'+cellData;
-          }else{
+          }else{//0이면
             $target.textContent ='';
             $target.className = '';
 

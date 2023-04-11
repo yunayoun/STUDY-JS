@@ -33,8 +33,8 @@ function defeated(){
 let out = 0;//뒤로가면 작동안함.왜지?
 $form.addEventListener('submit',(e)=>{
     e.preventDefault();
-    let value = input.value;
-    input.value = '';
+    let value = $input.value;
+    $input.value = '';
     if(!checkInput(value)){
         return;
     }

@@ -17,17 +17,17 @@ const $result = document.querySelector('#result');
 // }
 
 const onClickNumber= (event)=>{
-    if(!operator){// 비어있다
-            numOne +=event.target.textContent;
-            $result.value += event.target.textContent;
-            return;
-        }
-        // 비어있지않다
-            if(!numTwo){
-                $result.value = '';
-            }
-            numTwo += event.target.textContent;
-            $result.value += event.target.textContent;
+  if(!operator){// 비어있다
+    numOne +=event.target.textContent;
+    $result.value += event.target.textContent;
+    return;//함수내 리턴이나오면 else가 필요없음
+    }
+  // 비어있지않다
+  if(!numTwo){
+      $result.value = '';
+  }//화면에 넘버원이없어지고
+  numTwo += event.target.textContent;
+  $result.value += event.target.textContent;
 }
 
 

@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두더지 잡기</title>
+<style>
+  .cell {
+    display: inline-block; position: relative; 
+    width: 200px; height: 200px;
+    background: 'yellow'; overflow: hidden;
+  }
+  .gopher, .bomb {
+    width: 200px; height: 200px; bottom: 0; position: absolute; transition: bottom 1s;
+  }
+  .gopher {
+    background: url('./gopher.png') center center no-repeat;
+    background-size: 200px 200px;
+  }
+  .dead {
+    background: url('./dead_gopher.png') center center no-repeat;
+    background-size: 200px 200px;
+  }
+  .bomb {
+    background: url('./bomb.png') center center no-repeat;
+    background-size: 200px 200px;
+  }
+  .boom {
+    background: url('./explode.png') center center no-repeat;
+    background-size: 200px 200px;
+  }
+  .hidden {
+    bottom: -200px;
+  }
+  .hole {
+    width: 200px; height: 150px; position: absolute; bottom: 0;
+    background: url('./mole-hole.png') center center no-repeat;
+    background-size: 200px 150px;
+  }
+  .hole-front {
+    width: 200px; height: 30px; position: absolute; bottom: 0;
+    background: url('./mole-hole-front.png') center center no-repeat;
+    background-size: 200px 30px;
+  }
+</style>
+</head>
+<body>
+<div>
+  <span id="timer">0</span>초&nbsp;
+  <span id="score">0</span>점
+  <span id='chance'>3</span>목숨
+  <button id="start">시작</button>
+</div>
+<div id="game">
+  <div class="row">
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+    <div class="cell">
+      <div class="hole"></div>
+      <div class="gopher hidden"></div>
+      <div class="bomb hidden"></div>
+      <div class="hole-front"></div>
+    </div>
+  </div>
+</div>
+<script>
+  const $score= document.querySelector('#score');
+  const $timer= document.querySelector('#timer');
+  const $game = document.querySelector('#game');
+  const $start= document.querySelector('#start');
+  const $cells= document.querySelectorAll('.cell');
+  const $chance = document.querySelector('#chance');
+
+  holes = [0,0,0,0,0,0,0,0,0];
+  let time = 60;
+  let score = 0;
+  let started = false;//한번만 눌러야하는 버튼
+  let chance = 3;
+  let timerId;//스코프때문에 전역으로 빼주기
+  let tickId;//스코프때문에 전역으로 빼주기
+
+  $start.addEventListener('click',()=>{
+    if(started)return;//또클릭했을때 이미시작했으면 무시
+      started=true;
+      console.log('시작');
+      timerId = setInterval(() => {
+        time = (time *10 -1)/10;//소수로 계산할경우 안될수있어서 = time * 0.1
+        $timer.textContent = time;
+        if(time===0){
+          setTimeout(()=>{
+            clearInterval(timerId);
+            clearInterval(tickId);
+            alert(`게임끝 점수는 ${score}`);
+          },50)
+        }
+      }, 100);//0.1
+      tickId = setInterval(tick, 1000);
+      //화면 remove
+      //백그라운드 set(tick)-timeout(add)
+      //큐 tick add
+      tick();
+    });
+    //gopher30%,bomb20%나머지50% //if경우 누적식으로 0.5를해도 앞에서0.3을 뺀 두개만 읽는다
+    let gopherPercent = 0.3;
+    let bombPercent = 0.5;
+
+    function tick(){
+      holes.forEach((hole,index)=>{
+      if(hole)return;//무언가 일어나고있으면 return
+      const randomValue = Math.random()
+      if(randomValue < gopherPercent){
+        const $gopher = $cells[index].querySelector('.gopher');
+        holes[index]= setTimeout(() => {
+        $gopher.classList.add('hidden');
+        holes[index]= 0;
+        }, 1000);
+        $gopher.classList.remove('hidden');
+      }else if(randomValue < bombPercent){
+        const $bomb = $cells[index].querySelector('.bomb');
+        holes[index]= setTimeout(() => {
+        $bomb.classList.add('hidden');
+        holes[index]= 0;
+        }, 1000);
+        $bomb.classList.remove('hidden');
+      }
+    });
+  }
+
+  $cells.forEach(($cell,index)=>{
+  $cell.querySelector('.gopher').addEventListener('click',(e)=>{
+    if(!e.target.classList.contains('dead')){//중복클릭해서 점수가 올라가는에러//울지않는두더지면 +1
+      score +=1;
+      $score.textContent = score;
+    }
+    e.target.classList.add('dead');
+    e.target.classList.add('hidden');
+    clearTimeout(holes[index]);//기존내려오는타이머삭제-클릭하면바로내려옴
+    setTimeout(() => {
+      holes[index]=0;
+      e.target.classList.remove('dead');
+    }, 1000);
+  });
+  $cell.querySelector('.bomb').addEventListener('click',(e)=>{
+    if(!e.target.classList.contains('boom')){
+      chance -= 1;
+      $chance.textContent= chance;
+    }
+    if(chance===0){
+          setTimeout(()=>{
+            clearInterval(timerId)
+            clearInterval(tickId)
+            alert(`게임끝 점수는 ${score}`);
+          },50)
+        }
+    e.target.classList.add('boom');
+    e.target.classList.add('hidden');
+    clearTimeout(holes[index]);
+    setTimeout(() => {
+      holes[index]=0;
+      e.target.classList.remove('boom');
+    }, 1000);
+  })
+  })
+
+
+
+
+
+
+</script>
+</body>
+</html>

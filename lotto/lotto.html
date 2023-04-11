@@ -41,7 +41,7 @@ const $bonus = document.querySelector('#bonus');
   // 전체숫자의 랜덤을 돌리는경우(for,while)
   while(candidate.length>0){
     let random = Math.floor(Math.random()*candidate.length);
-    let spliceArray = candidate.splice(random,1);
+    let spliceArray = candidate.splice(random,1);//뽑은값은 배열에 들어있음
     let value = spliceArray[0];
     shuffle.push(value);
   }

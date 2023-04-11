@@ -21,7 +21,7 @@ function checkInput(input){//형식에맞는가
 if(input.length !==4){
   return alert('숫자 4개를 입력해주세요');
 }
-if(new Set(input).size !==4){//숫자4개랑 중복숫자랑 하나로 합칠수 있지만 정확하게 에러메세지를 알려주기위함.
+if(new Set(input).size !==4){//인풋값에 중복이있으면 중복숫자를 하나만 읽어서 정확하게 에러메세지를 알려주기위함.
   return alert('중복숫자입니다.');
 }
 if(tries.includes(input)){
@@ -32,8 +32,8 @@ return true;
 
 $form.addEventListener('submit',(e)=>{
 e.preventDefault();
-const value = input.value;
-input.value = '';
+const value = $input.value;
+$input.value = '';
 //   if(checkInput(value)){
 //     //문제없음
 //     tries.push(value);
