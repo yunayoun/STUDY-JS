@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>drag</title>
+</head>
+<style>
+  .item{
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    background-color: aqua;
+    margin: 20px;
+    padding: 30px;
+  }
+  li{
+    list-style: none;
+    text-align: center;
+
+  }
+</style>
+<body>
+  <ul class="list">
+    <li class="item" draggable="true">a</li>
+    <li class="item" draggable="true">l</li>
+    <li class="item" draggable="true">p</li>
+    <li class="item" draggable="true">p</li>
+    <li class="item" draggable="true">e</li>
+  </ul>
+
+  <script>
+    const list = document.querySelector('.list');
+    picked = null;
+    pickedIndex= null;
+
+    list.addEventListener('dragstart',(e)=>{
+      const obj = e.target;
+      pickedIndex = [...obj.parentNode.children].indexOf(obj)
+      picked = obj;
+    
+    })
+    list.addEventListener('dragover',(e)=>{
+      e.preventDefault()//over이계속작동하면서 drop 안됨
+    })
+    list.addEventListener('drop',(e)=>{
+      const obj = e.target;
+      const Index = [...obj.parentNode.children].indexOf(obj);
+      Index>pickedIndex?obj.after(picked):obj.before(picked);
+    })//picked가 이동하는데 인덱스가 작은지큰지비교해서 앞뒤이동
+
+
+
+  </script>
+</body>
+
+</html>
