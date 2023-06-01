@@ -177,7 +177,7 @@
     const tempArray=[]
     Array(tileCount).fill().forEach((_,i) => {
       const li = document.createElement('li');
-      li.setAttribute('data-index',i);
+      li.setAttribute('data-index',i);//속성을넣어주는메서드
       li.setAttribute('draggable','true');//안하면 버벅되는 느낌남.
       li.classList.add(`list${i}`);
       tempArray.push(li)

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>stopWatch</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .container{
+      background-color: aqua;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box{
+      background-color: aliceblue;
+      width: 40%;
+      height: 20%;
+      border: 1px solid blue;
+      border-radius: 10px;
+    }
+    .timer{
+      width: 100%;
+      text-align: center;
+      font-size: 3rem;
+      margin: 5px;
+      padding: 5px;
+    }
+    .btn{
+      text-align: center;
+    }
+    button{
+      margin: 0 5px;
+      padding: 10px;
+    }
+
+    .start{
+      background-color: green;
+    }
+    .ing{
+      background-color: yellow;
+    }
+    .reset{
+      background-color: red;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box">
+
+      <div class="timer">00:00:00</div>
+
+      <div class="btn">
+        <button class="start">start</button>
+        <button class="reset">reset</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    const timer = document.querySelector('.timer')
+    const start =document.querySelector('.start')
+    const reset = document.querySelector('.reset')
+    let disabled = false;
+
+    let seconds = 0;
+    let minutes =0;
+    let hours = 0;
+
+    let leadingSecond=0;
+    let leadingMinutes=0;
+    let leadingHours=0;
+
+    let timeInterval =null;
+    let timeStatus='stopped';
+    
+    function stopWatch(){
+      
+      seconds++
+
+      if(seconds/60 === 1){
+        seconds = 0;
+        minutes++;
+        if(minutes/60 === 1){
+          minutes =0;
+          hours++;
+        }
+      }
+    
+
+      //01,02,03
+      if(seconds <10){
+        leadingSecond = '0' + seconds.toString();
+      }else{
+        leadingSecond = seconds;
+      }
+      if(minutes <10){
+        leadingMinutes = '0' + minutes.toString();
+      }else{
+        leadingMinutes = minutes;
+      }
+    if(hours <10){
+      leadingHours = '0' + hours.toString();
+    }else{
+      leadingHours = hours;
+    }
+    timer.innerText = `${leadingHours} : ${leadingMinutes} : ${leadingSecond}`
+  }
+  
+
+    start.addEventListener('click',function(){
+      console.log('a')
+      if(timeStatus === 'stopped'){
+        timerInterval = window.setInterval(stopWatch,1000);
+        start.innerText = 'started'
+        start.style.background = 'blue'
+        this.disabled = true;
+        timeStatus = 'started'
+      }else{
+        window.clearInterval(timerInterval);
+        timeStatus = 'stopped'
+      
+      }
+      
+    })
+    reset.addEventListener('click',function(){
+      console.log('b')
+      window.clearInterval(timerInterval);
+      start.style.background = 'green'
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+      setTimeout(()=>{this.disabled = false},3000)
+      start.innerText = 'start'
+      start.disabled = false;
+      reset.disabled = true;
+      
+      timer.innerText = '00 : 00 : 00';
+    })
+
+    //오류 리셋하고 다시 start를 누르면 타이머가안감..2번째는 됨.왜??
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>age calculator</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container{
+      max-width: 600px;
+      background-color: azure;
+      text-align: center;
+      /* align-items: center; */
+      padding: 20px;
+      margin: 20px;
+    }
+    h1{
+      margin-bottom: 10px;
+    }
+    input{
+      
+      margin: 15px auto 10px;
+      display: block;
+    }
+    button{
+      padding: 10px;
+      margin: 10px;
+      background-color: orange;
+      color: white;
+      font-size: 15px;
+      border: none;
+      border-radius: 5px;
+      transform: background-color .5s ease;
+    }
+    button:hover{
+      background-color: goldenrod;
+    }
+    .result-age{
+      font-size: 15px;
+      font-weight: bold;
+
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+    <h1>age calculator</h1>
+    <p>Enter your date of birth</p>
+    <input type='date'>
+    <button>age calculator</button>
+    <p class="result"></p>
+</div>
+
+  <script>
+const $btn = document.querySelector('button');
+const $inputValue = document.querySelector('input');
+const $result = document.querySelector('.result');
+
+function ageCalculate(){
+  const inputValue = $inputValue.value;
+  if(inputValue === ''){
+    alert('enter your birthday');
+  }else{
+    const age = getAge(inputValue);
+    $result.innerText = `your age is ${age} ${age>1 ? 'years':'year'} old`;
+  }
+}
+function getAge(inputValue){
+  const today = new Date();
+  const birthday = new Date(inputValue);
+  let age = today.getFullYear() - birthday.getFullYear();
+  const month = today.getMonth() - birthday.getMonth();
+
+if (
+  month < 0 ||
+  (month === 0 && currentDate.getDate() < birthdayDate.getDate())
+) {
+  age--;
+}
+
+return age;
+}
+
+$btn.addEventListener('click',ageCalculate)
+
+
+
+
+  </script>
+</body>
+</html>

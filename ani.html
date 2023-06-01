@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: black;
+    }
+    span{
+      background-color: blue;
+      border-radius: 50%;
+      transform: translate(-50%,-50%);
+      width: 0;
+      height: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      animation: animate 5s linear;
+    
+    }
+    @keyframes animate{
+      0%{
+        transform: translate(-50%,-50%);
+        opacity: 1;
+      }
+      100%{
+        transform: translate(-50%,-50000%);
+        opacity: 0;
+        
+      }
+    }
+  </style>
+</head>
+<body>
+  <span></span>
+
+  <script>
+    const $body = document.querySelector('body');
+
+    $body.addEventListener('mousemove',(e)=>{
+      const xPos = e.offsetX
+      const yPos = e.offsetY
+      const $span = document.createElement('span');
+      $span.style.left = xPos + 'px';
+      $span.style.top = yPos +'px';
+      const size = Math.random()*200;
+      $span.style.width = size +'px';
+      $span.style.height = size +'px';
+      $body.appendChild($span);
+      setTimeout(() => {
+        $span.remove()
+      }, 3000);
+    })
+
+  </script>
+</body>
+</html>

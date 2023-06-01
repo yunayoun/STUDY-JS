@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ex2</title>
+  <style>
+*{
+  margin: 0;
+  padding: 0;
+}
+    .box{
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      align-items: center;
+    }
+.accordion{
+  width: 65%;
+  background: aqua;
+  padding: 30px;
+  border-radius: 10px;
+}
+.accordion .title{
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.content-acc .question{
+padding: 10px 0;
+font-size: 1.5rem;
+border-bottom: 1px solid black;
+cursor: pointer;
+
+position: relative;
+}
+.content-acc .question::after{
+  content: '+';
+  position: absolute;
+  right: -5px;
+}
+.content-acc .answer{
+  padding-top: 15px;
+  font: 1rem;
+  line-height: 1.5;
+  /* width: 100%; 질문은안하는데?*/
+
+  height: 0;
+  overflow:hidden;
+  transition: .5s;
+}
+.content-acc.active .answer{
+  height: 150px;
+}
+.content-acc.active .question{
+  font-size: 1rem;
+  transition: .4s;
+}
+.content-acc.active .question::after{
+  content:'-';
+  font-size: 1rem;
+  transform: .4s;
+}
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="accordion">
+    <h3 class="title">Asked Questions</h3>
+    <div class="content-acc">
+      <div class="question">
+        what is the money?1
+      </div>
+      <div class="answer">
+        Lorem ipsum dolor sit amet consectetur adipisicinxfdsadf
+        sdfasdfsaefsadfg elit. Sint, voluptatibus
+        vitae nemo dolores corporis deserunt
+      </div>
+    </div>
+    <div class="content-acc">
+      <div class="question">
+        what is the money?2
+      </div>
+      <div class="answer">
+        Lorem ipsum dolor sit amet consectetur adipisisdfasfdsaefsdfsfsecing elit. Sint, voluptatibus vitae nemo dolores corporis deserunt
+      </div>
+    </div>
+    <div class="content-acc">
+      <div class="question">
+        what is the money?3
+      </div>
+      <div class="answer">
+        Lorem ipsum dolor sit amet consectetur adipisicdfadfwefsdsafefadfasfesdging elit. Sint, voluptatibus vitae nemo dolores corporis deserunt
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    const content = document.getElementsByClassName('content-acc');
+    //querySelector 하면안되지!!!
+
+for(let i = 0;i<content.length; i++){
+  content[i].addEventListener('click',function(){//선언문으로 해야함.
+    this.classList.toggle('active');
+
+})
+
+}
+
+</script>
+</body>
+</html>

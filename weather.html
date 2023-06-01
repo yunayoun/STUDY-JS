@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>weather</title>
+  <style>
+    body{
+      margin: 0;
+      background-color: whitesmoke;
+    }
+    .container{
+      background-color: white;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,.2);
+      max-width: 600px;
+      margin: 50px auto;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    form{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    form input[type = 'text']{
+      padding: 5px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      width: 60%;
+    }
+    form input[type = 'submit']{
+      background-color: blue;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 18px;
+      outline: none;
+      cursor: pointer;
+    }
+    form input[type = 'submit']:hover{
+      background-color: skyblue;
+    }
+    .icon img{
+      width: 100px;
+      height: 100px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    .temperature{
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+    .description{
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .details{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .details div{
+      flex: 1;
+      background-color: bisque;
+      border-radius: 5px;
+      padding-top: 30px;
+      margin: 10px; 
+      min-height: 45px; 
+    }
+
+@media (max-width : 768px) {
+    form{
+      flex-direction: column;
+    }
+    form input[type='text']{
+      width: 100%;
+      margin-bottom: 10px;
+    }
+}
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>weather app</h1>
+    <form>
+      <input type="text" class="input-city" placeholder="Enter City">
+      <input type="submit" value="get weather">
+    </form>
+    <div class="weather-data">
+      <div class="icon">
+        <!-- <img src="http://openweathermap.org/img/wn/01d.png" alt="weather-icon"> -->
+      </div>
+      <div class="temperature"></div>
+      <div class="description"></div>
+      <div class="details">
+  <!-- <div>Fell like: 30°C </div>
+        <div>Humidity : 40% </div>
+        <div>wind speed : 5 m/s </div> -->
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  const apikey ='d85ceab3b1ff914765662929bd511fe9';
+  const weatherData = document.querySelector('.weather-data');
+  const input= document.querySelector('.input-city');
+  const form = document.querySelector('form')
+  
+  
+  form.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const cityValue = input.value;
+    getWeatherData(cityValue);
+  })
+  
+  
+  async function getWeatherData(cityValue){
+    try{
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${apikey}&units=metric`
+      );
+      if(!response.ok){
+        throw new Error('response not ok')
+      }
+      const data = await response.json()
+
+      const temperature = Math.round(data.main.temp);
+      const description = data.weather[0].description;
+      const icon1 = data.weather[0].icon;
+      const details = [
+        `Feels like: ${Math.round(data.main.feels_like)} `,
+        `Humidity: ${(data.main.humidity)}%`,
+        `Wind speed: ${data.wind.speed}m/s`,
+      ]
+      weatherData.querySelector('.icon').innerHTML = `<img src="http://openweathermap.org/img/wn/${icon1}.png" alt="weather-Icon">`;
+      weatherData.querySelector('.temperature').textContent = `${temperature}°C`;
+      weatherData.querySelector('.description').textContent = description;
+      weatherData.querySelector('.details').innerHTML = details
+      .map((detail)=>`<div>${detail}</div>`)
+      .join('');
+
+    }catch(err){
+      weatherData.querySelector(".icon").innerHTML = "";
+      weatherData.querySelector(".temperature").textContent = "";
+      weatherData.querySelector(".description").textContent =
+      "An error happened, please try again later";
+
+      weatherData.querySelector(".details").innerHTML = "";
+    }
+    
+  }
+
+
+
+
+
+
+
+
+  </script>
+</body>
+</html>

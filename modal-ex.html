@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ex1</title>
+
+  <style>
+
+#modal-btn{
+  position: absolute;
+  top: 60%;
+  left: 10%;
+  width: 350px;
+  height: 80px;
+  border: 1px solid red;
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 2rem;
+  box-shadow: 0 0 2px black;
+  transition: .5s;
+}
+#modal-btn:hover{
+  cursor: pointer;
+  background: rebeccapurple;
+}
+#modal{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-30%,-80%);
+  background-color: aliceblue;
+  border: 1px solid blue;
+  border-radius: 10px;
+  width: 200px;
+  height: 100px;
+  padding: 20px;
+  font-size: 2rem;
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  animation-name: animate;
+  animation-duration: .5s;
+}
+.close-btn{
+  font-size: 3rem;
+  cursor: pointer;
+  color: blue;
+}
+#modal-container{
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+@keyframes animate{
+  from{
+    top: -300px;
+    opacity: 0;
+  }
+  to{
+    top: 50%;
+    opacity: 1;
+  }
+}
+
+  </style>
+</head>
+<body>
+  
+<!-- <div id="container"> -->
+
+  <button id="modal-btn">
+    <div>where's our modal</div>
+  </button>
+
+  <div id="modal-container">
+    <div id="modal">
+      <div>here i am</div>
+      <div class="close-btn">&times;</div>
+    </div>
+  </div>
+
+
+  <!-- </div> -->
+
+  <script>
+const modalBtn = document.querySelector('#modal-btn')
+const container = document.querySelector('#modal-container')
+const modal =document.querySelector('#modal')
+const closeBtn = document.querySelector('.close-btn')
+
+modalBtn.addEventListener('click',function(){
+  container.style.display = 'block';
+})
+closeBtn.addEventListener('click',function(){
+  container.style.display = 'none'
+})
+window.addEventListener('click',function(e){
+  if(e.target === container){
+    container.style.display = 'none'
+
+  }
+});
+
+
+
+  </script>
+</body>
+</html>

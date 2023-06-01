@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+    }
+    .btn{
+      background-color: pink;
+      width: 80px;
+      height: 30px;
+      padding: 40px;
+      color: black;
+      font-size: 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before{
+      content: ' ';
+      background-color: red;
+      width: 0;
+      height: 0;
+      position: absolute;
+      border-radius: 50%;
+      left: var(--xPos);
+      top:var(--yPos);
+      transform: translate(-50%,-50%);
+      transition: width .5s ,height .5s;
+    }
+    .btn:hover::before{
+      width: 400px;
+      height: 400px;
+    }
+    .btn span{
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+<a href="#" class="btn"><span>button</span></a>
+
+  <script>
+    const $btn = document.querySelector('.btn');
+
+$btn.addEventListener('mouseover',(e)=>{
+const x = e.pageX-$btn.offsetLeft;
+const y = e.pageY-$btn.offsetTop;
+
+$btn.style.setProperty('--xPos' , x +'px');
+$btn.style.setProperty('--yPos' , y +'px');
+
+})
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>todolist</title>
+  <style>
+    body{
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: aquamarine;
+    }
+    .add-box{
+      background-color:whitesmoke;
+      width: 350px;
+      padding: 20px 10px;
+      border: 1px solid red;
+      border-radius: 10px;
+      box-shadow: 0 0 2px ;
+      margin-bottom: 20px;
+
+      display: flex;
+    }
+    input{
+      border-radius: 5px;
+      font-size: 1rem;
+      padding: 5px;
+      margin-right: 10px;
+
+      flex: 5;
+      
+    }
+    .add-btn{
+      font-size: 1.5 rem;
+      border: 1px solid red;
+      color: red;
+      background-color: whitesmoke;
+      border-radius: 5px;
+      padding: 5px;
+
+      flex: 1;
+      transition: .5s;
+    }
+    .add-btn:hover{
+      background-color: rgb(88, 241, 111);
+      color: whitesmoke;
+    }
+    .task{
+      width: 100%;
+      background-color: aliceblue;
+      border-radius: 5px;
+      box-shadow: 0 0 3px;
+      padding: 5px;
+      margin-bottom: 5px;
+
+      display: flex;
+      justify-content: space-between;
+    }
+    .task li{
+      list-style: none;
+      font-size: 1rem;
+      margin: 10px;
+      padding: 5px;
+
+      flex: 4;
+    }
+    .task button{
+    flex:1;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: white;
+    }
+    .task .checker{
+      margin-right: 5px;
+      color: green;
+      border: 1px solid green;
+      font-size: 1rem;
+    }
+    .task .deleteBtn{
+      border:1px solid red;
+      color: red;
+      font-size: 1rem;
+    } 
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="add-box">
+      <input class="add-input" type="text" placeholder="enter here">
+      <button class="add-btn">+</button>
+    </div>
+
+    <div class="list-box"></div>
+
+  </div>
+
+  <script>
+    const addInput = document.querySelector('.add-input');
+    const addBtn = document.querySelector('.add-btn');
+    const listBox = document.querySelector('.list-box');
+
+addBtn.addEventListener('click',()=>{
+
+  let task = document.createElement('div');
+    task.classList.add('task');
+
+  let li = document.createElement('li');
+    li.innerText = `${addInput.value}`;
+    task.appendChild(li);
+
+  let checker = document.createElement('button')
+    checker.innerHTML = '체크';
+    checker.classList.add('checker');
+    task.appendChild(checker);
+
+  let deleteBtn = document.createElement('button')
+    deleteBtn.innerHTML= '삭제';
+    deleteBtn.classList.add('deleteBtn');
+    task.appendChild(deleteBtn);
+
+  if(addInput.value === ''){
+    alert('리스트를 작성해주세요')
+  }else{
+    listBox.appendChild(task)
+  }
+addInput.value = '';
+
+
+checker.addEventListener('click',()=>{
+  // checker.parentElement.style.textDecoration = 'line-through'; //버튼아이콘일경우
+  li.style.textDecoration = 'line-through';
+  li.style.textDecorationColor = 'red';
+
+})
+
+deleteBtn.addEventListener('click',function(e){
+  
+  let target = e.target;
+
+  target.parentElement.remove();
+});
+
+});
+
+
+//width100% 왜다른가
+
+</script>
+</body>
+</html>
